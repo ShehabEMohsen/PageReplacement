@@ -31,7 +31,7 @@ void FIFO(int pages[], int pageNum, int frames, int frame[]) {
 	for (int j = 0;j < frames;j++) {
 		cout << frame[j] << " ";
 	}
-	cout << "\n Page fault = " << pagefaults;
+	cout << "\nPage fault = " << pagefaults;
 
 }
 
@@ -150,37 +150,81 @@ void Optimal(int pageNum, int frame[], int pages[], int frames) {
 
 
 int main() {
-	int pageNum, pages[30], frames, frame[50], methods;
-	char answer;
+	int pageNum, pages[30], frames, frame[50], methods ,answer;
 
-	cout << "Enter number of pages: ";
-	cin >> pageNum;
+	do{
+		cout << "Enter number of pages: ";
+		cin >> pageNum;
 
-	cout << "Enter the numbers: ";
-	for (int i = 0; i < pageNum; i++) {
-		cin >> pages[i];
-	}
-	cout << "Enter the number of frames: ";
-	cin >> frames;
+		cout << "Enter the numbers: ";
+		for (int i = 0; i < pageNum; i++) {
+			cin >> pages[i];
+		}
+		cout << "Enter the number of frames: ";
+		cin >> frames;
 
-	do {
-		cout << "please choose from the following methods" << endl;
+		cout << endl;
+
+		cout << "please choose from the following methods" << endl << endl;
 		cout << "1) FIFO" << endl;
 		cout << "2) LRU" << endl;
 		cout << "3) Optimal" << endl;
+		cout << "4) Exit" << endl << endl;
 		cin >> methods;
+		cout << endl;
 
 		if (methods == 1) {
 			FIFO(pages, pageNum, frames, frame);
-			break;
+			cout << endl << endl;
+			cout << "do you want to continue?" << endl;
+			cout << "1) Yes" << endl;
+			cout << "2) No" << endl << endl;
+			cin >> answer;
+			cout << endl;
+			if (answer == 1) {
+				continue;
+			}
+			else if (answer == 2) {
+				cout << "Thank You, have a good day." << endl;
+				break;
+			}
 		}
 		else if (methods == 2) {
 			LRU(pageNum, pages, frames);
-			break;
+			cout << endl << endl;
+			cout << "do you want to continue?" << endl;
+			cout << "1) Yes" << endl;
+			cout << "2) No" << endl;
+			cin >> answer;
+			cout << endl;
+			if (answer == 1) {
+				continue;
+			}
+			else if (answer == 2) {
+				cout << "Thank You, have a good day." << endl;
+				break;
+			}
 		}
 		else if (methods == 3) {
 			Optimal(pageNum, frame, pages, frames);
+			cout << endl << endl;
+			cout << "do you want to continue?" << endl;
+			cout << "1) Yes" << endl;
+			cout << "2) No" << endl;
+			cin >> answer;
+			cout << endl;
+			if (answer == 1) {
+				continue;
+			}
+			else if (answer == 2) {
+				cout << "Thank You, have a good day." << endl;
+				break;
+			}
+		}
+		else if (methods == 4) {
+			cout << "Thank You, have a good day." << endl;
 			break;
 		}
 	} while (true);
+
 }
