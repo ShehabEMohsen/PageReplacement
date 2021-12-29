@@ -2,16 +2,25 @@
 
 using namespace std;
 
+//FIFO Function
 void FIFO(int pages[], int pageNum, int frames, int frame[]) {
 	int x, y;
 	int pagefaults = 0;
+
+	//Filling the frames with -1 to declare them as empty
+
 	for (int i = 0;i < frames;i++) {
 		frame[i] = -1;
 	}
-	y = 0;
-	for (int i = 0; i < pageNum; i++) {
 
+	//y is the variable I use to insert values into the frames
+	y = 0;
+
+	
+	for (int i = 0; i < pageNum; i++) {
+		//x checks if frame is available  0->available  1->not available
 		x = 0;
+
 		for (int j = 0; j < frames; j++) {
 			if (frame[j] == pages[i]) {
 				x = 1;
@@ -19,7 +28,11 @@ void FIFO(int pages[], int pageNum, int frames, int frame[]) {
 		}
 		if (x == 0) {
 			frame[y] = pages[i];
+			//if y=5 and I have 5 frames, when I reach frame 5 
+			// the mod helps me go back to frame 1 and etc.
 			y = (y + 1) % frames;
+
+			//Increase page faults number
 			pagefaults++;
 
 
@@ -27,43 +40,77 @@ void FIFO(int pages[], int pageNum, int frames, int frame[]) {
 
 
 	}
-	cout << "Final frame: ";
+
+	//Printing the final frames
+	cout << "Final frames: ";
 	for (int j = 0;j < frames;j++) {
 		cout << frame[j] << " ";
 	}
+	//Print page faults value
 	cout << "\nPage fault = " << pagefaults;
 
 }
 
+
+
+//LRU Function
 void LRU(int pageNum, int pages[], int frames) {
 	int queue[20], x = 0, pagefaults = 0, c1, c2[20], b[20];
+
+	//insert the first value of the inserted numbers
+	//into the first frame in my array
 	queue[x] = pages[x];
+
+	//then increase page fault and the counter for indexes
 	pagefaults++;x++;
+
+	//start the loop from 1 since we already 
+	//inserted the first value (index 0)
 	for (int i = 1;i < pageNum;i++) {
 		c1 = 0;
+		
+
+		//Update the c1 counter related to if the frames are empty or not
 		for (int j = 0;j < frames;j++) {
 			if (pages[i] != queue[j])
 				c1++;
 		}
+
+		//pagefaults=5, x counter=3, c1=3
+
+		//To check if number to enter exists already in my frames
 		if (c1 == frames) {
-			pagefaults++;
+			
+			pagefaults++;//5
+
+			//to fill empty frames in the start
 			if (x < frames) {
 				queue[x] = pages[i];
 				x++;
 			}
-			else {
+			else {//enters else when x counter >= frame number (LRU Algorithm)
+
+				//Check which frame has the LRU number
+				// (greatest number in c2 array)
 				for (int k = 0;k < frames; k++) {
 					c2[k] = 0;
-					for (int j = i - 1;j < pageNum;j--) {
+					for (int j = i - 1;j < pageNum;j--) {//  c2 [0,2,1]
 						if (queue[k] != pages[j])
 							c2[k]++;
 						else
 							break;
 					}
 				}
+				//Fill another array with the elements of c2
 				for (int k = 0; k < frames; k++)
 					b[k] = c2[k];
-				for (int k = 0;k < frames; k++) {
+				//3 4 5 2 6
+
+				//2 4 5
+
+
+				//Sort b array in descending order to later swap out the LRU number
+				for (int k = 0;k < frames; k++) {//b[2,1,0]  c2[0,2,1]
 					for (int j = k;j < frames;j++) {
 						if (b[k] < b[j]) {
 							int temp = b[k];
@@ -72,20 +119,28 @@ void LRU(int pageNum, int pages[], int frames) {
 						}
 					}
 				}
+
+				//Swapping out the LRU number with the 
+				//new number occurs
 				for (int k = 0; k < frames; k++) {
 					if (c2[k] == b[0])
-						queue[k] = pages[i];
+						queue[k] = pages[i]; //2 6 5
 				}
 			}
 		}
 	}
+
+	//Printing the final frames
 	cout << "\nFinal frame: ";
 	for (int j = 0;j < frames;j++) {
 		cout << queue[j] << " ";
 	}
+	//Print page faults value
 	cout << "\nPage faults = " << pagefaults;
 }
 
+
+//Optimal Function
 void Optimal(int pageNum, int frame[], int pages[], int frames) {
 	int f1, f2, f3, position, pagefaults = 0;
 	int temp[20];
@@ -140,19 +195,23 @@ void Optimal(int pageNum, int frame[], int pages[], int frames) {
 		}
 
 	}
+
+	//Printing the final frames
 	cout << "\nFinal frame is ( ";
 	for (int j = 0;j < frames;j++) {
 		cout << frame[j] << " ";
 	}
 	cout << ")";
+
+	//Print page faults number
 	cout << "\nPage faults = " << pagefaults;
 }
 
 
 int main() {
-	int pageNum, pages[30], frames, frame[50], methods ,answer;
+	int pageNum, pages[30], frames, frame[50], methods, answer;
 
-	do{
+	do {
 		cout << "Enter number of pages: ";
 		cin >> pageNum;
 
