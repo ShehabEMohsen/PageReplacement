@@ -9,7 +9,7 @@ void FIFO(int pages[], int pageNum, int frames, int frame[]) {
 
 	//Filling the frames with -1 to declare them as empty
 
-	for (int i = 0;i < frames;i++) {
+	for ( int i = 0 ; i < frames ; i++) {
 		frame[i] = -1;
 	}
 
@@ -17,11 +17,11 @@ void FIFO(int pages[], int pageNum, int frames, int frame[]) {
 	y = 0;
 
 	
-	for (int i = 0; i < pageNum; i++) {
+	for (int i = 0 ; i < pageNum ; i++) {
 		//x checks if frame is available  0->available  1->not available
 		x = 0;
 
-		for (int j = 0; j < frames; j++) {
+		for (int j = 0 ; j < frames ; j++) {
 			if (frame[j] == pages[i]) {
 				x = 1;
 			}
@@ -66,12 +66,12 @@ void LRU(int pageNum, int pages[], int frames) {
 
 	//start the loop from 1 since we already 
 	//inserted the first value (index 0)
-	for (int i = 1;i < pageNum;i++) {
+	for (int i = 1 ; i < pageNum ; i++) {
 		c1 = 0;
 		
 
 		//Update the c1 counter related to if the frames are empty or not
-		for (int j = 0;j < frames;j++) {
+		for (int j = 0 ; j < frames ; j++) {
 			if (pages[i] != queue[j])
 				c1++;
 		}
@@ -85,14 +85,14 @@ void LRU(int pageNum, int pages[], int frames) {
 
 			//to fill empty frames in the start
 			if (x < frames) {
-				queue[x] = pages[i];
 				x++;
+				queue[x] = pages[i];
 			}
 			else {//enters else when x counter >= frame number (LRU Algorithm)
 
 				//Check which frame has the LRU number
 				// (greatest number in c2 array)
-				for (int k = 0;k < frames; k++) {
+				for (int k = 0 ; k < frames ; k++) {
 					c2[k] = 0;
 					for (int j = i - 1;j < pageNum;j--) {//  c2 [0,2,1]
 						if (queue[k] != pages[j])
@@ -102,7 +102,7 @@ void LRU(int pageNum, int pages[], int frames) {
 					}
 				}
 				//Fill another array with the elements of c2
-				for (int k = 0; k < frames; k++)
+				for (int k = 0 ; k < frames ; k++)
 					b[k] = c2[k];
 				//3 4 5 2 6
 
@@ -110,8 +110,8 @@ void LRU(int pageNum, int pages[], int frames) {
 
 
 				//Sort b array in descending order to later swap out the LRU number
-				for (int k = 0;k < frames; k++) {//b[2,1,0]  c2[0,2,1]
-					for (int j = k;j < frames;j++) {
+				for (int k = 0 ; k < frames ; k++) {//b[2,1,0]  c2[0,2,1]
+					for (int j = k ; j < frames ;j++) {
 						if (b[k] < b[j]) {
 							int temp = b[k];
 							b[k] = b[j];
@@ -122,7 +122,7 @@ void LRU(int pageNum, int pages[], int frames) {
 
 				//Swapping out the LRU number with the 
 				//new number occurs
-				for (int k = 0; k < frames; k++) {
+				for (int k = 0 ; k < frames ; k++) {
 					if (c2[k] == b[0])
 						queue[k] = pages[i]; //2 6 5
 				}
@@ -143,20 +143,32 @@ void LRU(int pageNum, int pages[], int frames) {
 //Optimal Function
 void Optimal(int pageNum, int frame[], int pages[], int frames) {
 	int f1, f2, f3, position, pagefaults = 0;
+
+	//temporary array with a random size to fit the numbers
 	int temp[20];
+
+	//The big loop that runs through 
+	//the numbers the user enters
 	for (int i = 0; i < pageNum; i++) {
 		f1 = f2 = 0;
+		//3 4 5 2 6
+
+		//-1 -1 -1
+		//Small loop to check if the number
+		//queued to be inserted exists in frames
 		for (int j = 0; j < pageNum; j++) {
 			if (frame[j] == pages[i]) {
-				f1 = f2 = 1;
+				f1 = 1;
+				f2 = 1;
 				break;
 			}
 		}
 		if (f1 == 0) {
 			for (int j = 0;j < frames;j++) {
-				if (frame[j] == -1) {
-					pagefaults++;
+
+				if (frame[j] == -1) {//If the frame is empty, fill it with the element queued
 					frame[j] = pages[i];
+					pagefaults++;
 					f2 = 1;
 					break;
 				}
@@ -164,26 +176,29 @@ void Optimal(int pageNum, int frame[], int pages[], int frames) {
 		}
 		if (f2 == 0) {
 			f3 = 0;
-			for (int j = 0;j < frames;j++) {
+			for (int j = 0;j < frames;j++) {//Fill frames with -1 to show they are empty
 				temp[j] = -1;
 				for (int k = i + 1;k < pageNum;k++) {
 					if (frame[j] == pages[k]) {
-						temp[j] = k;
+						temp[j] = k; //Fill the temporary array with the priority of each number
 						break;
 					}
 				}
 			}
-			for (int j = 0;j < frames;j++) {
+			//Check if any frames are empty
+			for (int j = 0 ; j < frames ; j++) {
 				if (temp[j] == -1) {
-					position = j;
 					f3 = 1;
+					position = j;
 					break;
 				}
 			}
+			//f3 is the identicator that the frames aren't empty
+			//0 -> no frame is empty    1 -> at least one frame is empty
 			if (f3 == 0) {
 				int max = temp[0];
 				position = 0;
-				for (int j = 1;j < frames;j++) {
+				for (int j = 1 ; j < frames ; j++) {
 					if (temp[j] > max) {
 						max = temp[j];
 						position = j;
@@ -211,6 +226,7 @@ void Optimal(int pageNum, int frame[], int pages[], int frames) {
 int main() {
 	int pageNum, pages[30], frames, frame[50], methods, answer;
 
+	//infinite loop to repeat the question
 	do {
 		cout << "Enter number of pages: ";
 		cin >> pageNum;
@@ -232,6 +248,7 @@ int main() {
 		cin >> methods;
 		cout << endl;
 
+		//FIFO Function
 		if (methods == 1) {
 			FIFO(pages, pageNum, frames, frame);
 			cout << endl << endl;
@@ -248,6 +265,8 @@ int main() {
 				break;
 			}
 		}
+
+		//LRU Function
 		else if (methods == 2) {
 			LRU(pageNum, pages, frames);
 			cout << endl << endl;
@@ -264,6 +283,8 @@ int main() {
 				break;
 			}
 		}
+
+		//Optimal Function
 		else if (methods == 3) {
 			Optimal(pageNum, frame, pages, frames);
 			cout << endl << endl;
