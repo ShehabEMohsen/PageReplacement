@@ -85,8 +85,8 @@ void LRU(int pageNum, int pages[], int frames) {
 
 			//to fill empty frames in the start
 			if (x < frames) {
-				x++;
 				queue[x] = pages[i];
+				x++;
 			}
 			else {//enters else when x counter >= frame number (LRU Algorithm)
 
@@ -156,7 +156,7 @@ void Optimal(int pageNum, int frame[], int pages[], int frames) {
 		//-1 -1 -1
 		//Small loop to check if the number
 		//queued to be inserted exists in frames
-		for (int j = 0; j < pageNum; j++) {
+		for (int j = 0; j < frames; j++) {
 			if (frame[j] == pages[i]) {
 				f1 = 1;
 				f2 = 1;
@@ -174,6 +174,7 @@ void Optimal(int pageNum, int frame[], int pages[], int frames) {
 				}
 			}
 		}
+		//Optimal starts here
 		if (f2 == 0) {
 			f3 = 0;
 			for (int j = 0;j < frames;j++) {//Fill frames with -1 to show they are empty
